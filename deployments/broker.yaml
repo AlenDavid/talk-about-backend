@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-service
+spec:
+  selector:
+    app: broker
+  ports:
+  - port: 5672
+    targetPort: 5672
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: broker
+spec:
+  selector:
+    matchLabels:
+      app: broker
+  serviceName: plants
+  template:
+    metadata:
+      labels:
+        app: broker
+    spec:
+      containers:
+      - name: broker
+        image: rabbitmq:3-management
+        ports:
+        - containerPort: 5672
+          name: rabbitmq
+        - containerPort: 15672
+          name: management
